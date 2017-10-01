@@ -33,9 +33,10 @@ def create_header(key, password):
 
 def api_request(api_url, headers):
     try:
-        api_response = get(api_url, headers=headers, params='', timeout=30)
-    except:
-        return None
+        api_response = get(api_url, headers=headers, timeout=30)
+    except Exception as e:
+        print ("Exiting due to {}".format(e.message))
+        exit()
     return api_response.json()
 
 

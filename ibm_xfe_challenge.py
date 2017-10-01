@@ -43,19 +43,21 @@ def api_request(api_url, headers):
 if __name__ == "__main__":
 
     parser = OptionParser(description=description_text)
-    parser.add_option("-i", dest="ip", default=None,
+    parser.add_option("-i", dest="ip", default=None, type=str,
                       help="Returns the IP report for the entered IP.",
                       metavar="ip-address")
-    parser.add_option("-t", dest="type", default="r",
+    parser.add_option("-t", dest="type", default="r", type=str,
                       help="Report [R], History [H], or Malware [M]",
                       metavar="ip-address")
-
-    (options, args) = parser.parse_args()
-
+    options, _ = parser.parse_args()
     if len(argv[1:]) == 0:
         parser.print_help()
 
     options_type = str(options.type).lower()
+    if options_type not in ['r', 'h', 'm']:
+        print (parser.description)
+        exit()
+
     type_actions = {
         'r': '/ipr/',
         'h': '/ipr/history/',

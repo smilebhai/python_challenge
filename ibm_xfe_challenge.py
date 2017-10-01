@@ -4,10 +4,9 @@
 # https://api.xforce.ibmcloud.com/doc/
 
 from os import environ
-from sys import argv
 from json import dumps
 from base64 import b64encode
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 from requests import get
 
@@ -19,6 +18,7 @@ $ python python_challenge.py -i 8.8.8.8 -t M # returns the Malware for the ip.
 """
 
 
+# Define function to obtain env variables defined in the local file .env.
 def get_credential(name):
     return environ.get(name, "provide your credentials")
 
@@ -40,23 +40,21 @@ def api_request(api_url, headers):
     return api_response.json()
 
 
-if __name__ == "__main__":
+def main():
 
-    parser = OptionParser(description=description_text)
-    parser.add_option("-i", dest="ip", default=None, type=str,
-                      help="Returns the IP report for the entered IP.",
-                      metavar="ip-address")
-    parser.add_option("-t", dest="type", default="r", type=str,
-                      help="Report [R], History [H], or Malware [M]",
-                      metavar="ip-address")
-    options, _ = parser.parse_args()
-    if len(argv[1:]) == 0:
+    parser = ArgumentParser(epilog=description_text)
+    parser.add_argument("-i", dest="ip", default=None, type=str,
+                        help="ip address", metavar="ipaddress")
+
+    parser.add_argument("-t", dest="type", default="r", type=str,
+                        help="Report [R] default, History [H], or Malware [M]",
+                        metavar="type", choices=['r', 'h', 'm', 'R', 'H', 'M'])
+    args = parser.parse_args()
+
+    action_type = str(args.type).lower()
+
+    if args.ip is None:
         parser.print_help()
-
-    options_type = str(options.type).lower()
-    if options_type not in ['r', 'h', 'm']:
-        print (parser.description)
-        exit()
 
     type_actions = {
         'r': '/ipr/',
@@ -66,7 +64,12 @@ if __name__ == "__main__":
 
     headers = create_header(get_credential('API_KEY'), get_credential('API_PASSWORD'))
     base_url = "https://api.xforce.ibmcloud.com"
-    api_url = "{}{}{}".format(base_url, type_actions[options_type], options.ip)
+    api_url = "{}{}{}".format(base_url, type_actions[action_type], args.ip)
+    print api_url
     api_response_data = api_request(api_url, headers)
 
     print (dumps(api_response_data, indent=4, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

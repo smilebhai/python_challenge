@@ -5,5 +5,11 @@ https://api.xforce.ibmcloud.com/doc/
 
 ```
 $ pip install -r requirements.txt
+```
+
+## Test
 
 ```
+$ pytest
+```
+

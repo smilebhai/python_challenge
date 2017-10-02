@@ -6,19 +6,28 @@
 from os import environ
 from json import dumps
 from base64 import b64encode
-from argparse import ArgumentParser
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from requests import get
 
-description_text = """Examples:
+description_text = """
+Examples:
 
-$ python python_challenge.py -i 8.8.8.8 -t R # returns the Report for the ip.
-$ python python_challenge.py -i 8.8.8.8 -t H # returns the History for the ip.
-$ python python_challenge.py -i 8.8.8.8 -t M # returns the Malware for the ip.
+To return the IP report for the entered IP /ipr/{ip} :
+
+    $ python python_challenge.py -i 1.2.3.4
+
+To return the IP reputation history report for the entered IP /ipr/history{ip} :
+
+    $ python python_challenge.py -i 1.2.3.4 -t H
+
+To return the malware associated with the entered IP /ipr/malware/{ip} :
+
+    $ python python_challenge.py -i 1.2.3.4 -t M
+
 """
 
 
-# Define function to obtain env variables defined in the local file .env.
 def get_credential(name):
     return environ.get(name, "provide your credentials")
 
@@ -42,7 +51,8 @@ def api_request(api_url, headers):
 
 def main():
 
-    parser = ArgumentParser(epilog=description_text)
+    parser = ArgumentParser(formatter_class=RawDescriptionHelpFormatter,
+                            epilog=description_text)
     parser.add_argument("-i", dest="ip", default=None, type=str,
                         help="ip address", metavar="ipaddress")
 
@@ -65,7 +75,7 @@ def main():
     headers = create_header(get_credential('API_KEY'), get_credential('API_PASSWORD'))
     base_url = "https://api.xforce.ibmcloud.com"
     api_url = "{}{}{}".format(base_url, type_actions[action_type], args.ip)
-    print api_url
+
     api_response_data = api_request(api_url, headers)
 
     print (dumps(api_response_data, indent=4, sort_keys=True))

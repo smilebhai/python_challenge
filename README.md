@@ -41,6 +41,15 @@ To return the malware associated with the entered IP /ipr/malware/{ip} :
     $ python ibm_xfe_challenge.py -i 1.2.3.4 -t M
 ```
 
-## Test
+## Unit Test
+
+Unit test using ```pytest``` framework.
 
 	$ pytest
+
+## Style Guide
+
+Study Guide Enforcement using ```flake8```
+
+	$ flake8 <path/to/code/>
+

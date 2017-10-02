@@ -30,15 +30,15 @@ Examples:
 
 To return the IP report for the entered IP /ipr/{ip} :
 
-    $ python python_challenge.py -i 1.2.3.4
+    $ python ibm_xfe_challenge.py -i 1.2.3.4
 
 To return the IP reputation history report for the entered IP /ipr/history{ip} :
 
-    $ python python_challenge.py -i 1.2.3.4 -t H
+    $ python ibm_xfe_challenge.py -i 1.2.3.4 -t H
 
 To return the malware associated with the entered IP /ipr/malware/{ip} :
 
-    $ python python_challenge.py -i 1.2.3.4 -t M
+    $ python ibm_xfe_challenge.py -i 1.2.3.4 -t M
 ```
 
 ## Test

@@ -15,15 +15,15 @@ Examples:
 
 To return the IP report for the entered IP /ipr/{ip} :
 
-    $ python python_challenge.py -i 1.2.3.4
+    $ python ibm_xfe_challenge.py -i 1.2.3.4
 
 To return the IP reputation history report for the entered IP /ipr/history{ip} :
 
-    $ python python_challenge.py -i 1.2.3.4 -t H
+    $ python ibm_xfe_challenge.py -i 1.2.3.4 -t H
 
 To return the malware associated with the entered IP /ipr/malware/{ip} :
 
-    $ python python_challenge.py -i 1.2.3.4 -t M
+    $ python ibm_xfe_challenge.py -i 1.2.3.4 -t M
 
 """
 
@@ -50,34 +50,28 @@ def api_request(api_url, headers):
 
 
 def main():
-
     parser = ArgumentParser(formatter_class=RawDescriptionHelpFormatter,
                             epilog=description_text)
     parser.add_argument("-i", dest="ip", default=None, type=str,
                         help="ip address", metavar="ipaddress")
-
     parser.add_argument("-t", dest="type", default="r", type=str,
                         help="Report [R] default, History [H], or Malware [M]",
                         metavar="type", choices=['r', 'h', 'm', 'R', 'H', 'M'])
     args = parser.parse_args()
-
-    action_type = str(args.type).lower()
-
     if args.ip is None:
         parser.print_help()
-
+        exit()
+ 
+    action_type = str(args.type).lower()
     type_actions = {
         'r': '/ipr/',
         'h': '/ipr/history/',
         'm': '/ipr/malware/'
     }
-
     headers = create_header(get_credential('API_KEY'), get_credential('API_PASSWORD'))
     base_url = "https://api.xforce.ibmcloud.com"
     api_url = "{}{}{}".format(base_url, type_actions[action_type], args.ip)
-
     api_response_data = api_request(api_url, headers)
-
     print (dumps(api_response_data, indent=4, sort_keys=True))
 
 
